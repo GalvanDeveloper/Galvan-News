@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Galvan News </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Easing & Animation */
+            --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+            --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+            --ease-soft-spring: cubic-bezier(0.4, 1.3, 0.6, 1);
+            --ease-overshoot: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-spring-squish: cubic-bezier(.5, 1.75, .75, 1.25);
+
+
+            /* Layout & Sizing */
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --header-height: 64px;
+            --command-bar-height: 72px;
+            --command-bar-v-margin: 16px;
+            --command-bar-h-margin: 16px;
+            --command-bar-expanded-height: 470px;
+            --content-h-padding: 24px;
+            --blur-intensity: 5px;
+            --super-radius: 50px;
+            --card-radius: 38px;
+            
+            /* Base Theme (Light) */
+            --app-body-bg-light: #F4F7FA;
+            --app-text-primary-light: #111827;
+            --app-text-secondary-light: #4b5563;
+            --app-border-color-light: rgba(0, 0, 0, 0.08);
+            --app-card-bg-light: rgba(255, 255, 255, 0.1);
+            --app-shadow-light: rgba(76, 81, 191, 0.1);
+            --app-shadow-strong-light: rgba(76, 81, 191, 0.2);
+            --app-glass-bg-light: rgba(255, 255, 255, 0.3);
+            --app-logo-blur-grad-light: radial-gradient(circle at 20% 80%, hsla(223, 100%, 50%, 0.6), transparent 40%), radial-gradient(circle at 80% 30%, hsla(80, 100%, 60%, 0.6), transparent 40%);
+            --app-header-grad-light: linear-gradient(to bottom, var(--app-body-bg-light) 60%, transparent);
+
+            /* Base Theme (Dark) */
+            --app-body-bg-dark: #03071E; 
+            --app-text-primary-dark: #F9FAFB;
+            --app-text-secondary-dark: #9CA3AF;
+            --app-border-color-dark: rgba(255, 255, 255, 0.1);
+            --app-card-bg-dark: rgba(23, 30, 48, 0.1);
+            --app-shadow-dark: rgba(0, 0, 0, 0.3);
+            --app-shadow-strong-dark: rgba(0, 0, 0, 0.5);
+            --app-glass-bg-dark: rgba(17, 24, 39, 0.3);
+            --app-logo-blur-grad-dark: radial-gradient(circle at 20% 80%, hsl(112, 100%, 50%), transparent 40%), radial-gradient(circle at 80% 30%, hsla(201, 100%, 50%, 0.7), transparent 40%);
+            --app-header-grad-dark-start: color-mix(in srgb, var(--app-icon-primary-dark) 10%, var(--app-body-bg-dark));
+            --app-header-grad-dark: linear-gradient(to bottom, var(--app-header-grad-dark-start) 0%, var(--app-body-bg-dark) 70%, transparent);
+
+            /* Default Palette: Galvan */
+            --app-icon-primary-light: #2563EB;
+            --app-icon-active-light: #1D4ED8;
+            --app-icon-primary-dark: #60A5FA;
+            --app-icon-active-dark: #93C5FD;
+
+            /* Assign current theme */
+            --current-body-bg: var(--app-body-bg-light);
+            --current-text-primary: var(--app-text-primary-light);
+            --current-text-secondary: var(--app-text-secondary-light);
+            --current-icon-primary: var(--app-icon-primary-light);
+            --current-icon-active: var(--app-icon-active-light);
+            --current-border-color: var(--app-border-color-light);
+            --current-card-bg: var(--app-card-bg-light);
+            --current-shadow: var(--app-shadow-light);
+            --current-shadow-strong: var(--app-shadow-strong-light);
+            --current-glass-bg: var(--app-glass-bg-light);
+            --current-logo-blur-grad: var(--app-logo-blur-grad-light);
+            --current-header-grad: var(--app-header-grad-light);
+        }
+
+        body:not(.light-mode) {
+            --current-body-bg: var(--app-body-bg-dark);
+            --current-text-primary: var(--app-text-primary-dark);
+            --current-text-secondary: var(--app-text-secondary-dark);
+            --current-icon-primary: var(--app-icon-primary-dark);
+            --current-icon-active: var(--app-icon-active-dark);
+            --current-border-color: var(--app-border-color-dark);
+            --current-card-bg: var(--app-card-bg-dark);
+            --current-shadow: var(--app-shadow-dark);
+            --current-shadow-strong: var(--app-shadow-strong-dark);
+            --current-glass-bg: var(--app-glass-bg-dark);
+            --current-logo-blur-grad: var(--app-logo-blur-grad-dark);
+            --current-header-grad: var(--app-header-grad-dark);
+        }
+
+        /* Base & Reset */
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        html, body { height: 100%; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--current-body-bg); color: var(--current-text-primary);
+            transition: background-color 0.5s var(--ease-in-out-cubic), color 0.5s var(--ease-in-out-cubic);
+            overflow: hidden; position: relative;
+        }
+
+        /* Animated background */
+        .animated-background {
+            position: fixed; top: -10%; left: -10%; width: 120%; height: 120%; z-index: -1; pointer-events: none;
+            background: var(--current-logo-blur-grad); filter: blur(80px);
+            animation: rotateBackground 40s linear infinite alternate, fadeInBackground 2s var(--ease-out-quint) 0.5s forwards;
+            will-change: transform, opacity; transition: background 0.8s var(--ease-in-out-cubic);
+        }
+        @keyframes fadeInBackground { to { opacity: 0.7; } }
+        @keyframes rotateBackground { 0% { transform: rotate(0deg) scale(1.1); } 100% { transform: rotate(360deg) scale(1.1); } }
+        body:not(.light-mode) .animated-background { animation-name: rotateBackground, fadeInBackgroundDark; }
+        @keyframes fadeInBackgroundDark { to { opacity: 0.6; } }
+
+        .app-container { width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; z-index: 1; }
+        
+        /* Header */
+        .app-header {
+            padding: var(--safe-top) var(--content-h-padding) 0; height: calc(var(--header-height) + var(--safe-top));
+            display: flex; align-items: center; justify-content: space-between; position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(255, 255, 255, 0.09);
+            margin-left:35px;margin-right:35px;
+            margin-top:10px;
+            border-radius:40px;
+            backdrop-filter: blur(5px) url(#liquid-refraction);
+            -webkit-backdrop-filter: blur(5px) url(#liquid-refraction);
+            transition: background 0.5s var(--ease-in-out-cubic); 
+            will-change: background;
+        }
+        .app-header h1 { font-size: 1.8rem; font-weight: 800; }
+        .header-actions .nav-btn { color: var(--current-text-secondary); }
+
+        /* Main Content */
+        main.news-container {
+            flex-grow: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+            padding: calc(var(--header-height) + var(--safe-top)) var(--content-h-padding) calc(var(--command-bar-height) + var(--command-bar-v-margin) * 2 + var(--safe-bottom)) var(--content-h-padding);
+            transition: transform 0.6s var(--ease-out-quint), filter 0.6s var(--ease-out-quint), border-radius 0.6s var(--ease-out-quint);
+            will-change: transform, filter;
+        }
+        body.modal-open main.news-container {
+            transform: scale(0.92) translateY(-14px);
+            filter: blur(calc(var(--blur-intensity) * 1.5)) brightness(0.9);
+            border-radius: var(--super-radius); 
+            pointer-events: none; user-select: none; overflow: hidden;
+            transition-property: transform, filter, border-radius; transition-duration: 0.6s;
+        }
+
+        /* News Categories */
+        .news-categories { display: flex; gap: 12px; overflow-x: auto; padding: 16px var(--content-h-padding); margin: 0 calc(var(--content-h-padding) * -1) 24px; scrollbar-width: none; will-change: transform; }
+        .news-categories::-webkit-scrollbar { display: none; }
+        .category-chip { 
+            flex-shrink: 0; padding: 12px 24px; border-radius: 100px; font-weight: 600; font-size: 0.9rem; 
+            background-color: var(--current-glass-bg); color: var(--current-text-secondary); 
+            border: 1px solid var(--current-border-color); 
+            backdrop-filter: blur(var(--blur-intensity));
+            -webkit-backdrop-filter: blur(var(--blur-intensity));
+            cursor: pointer; transition: all 0.3s var(--ease-soft-spring); 
+            will-change: transform, background-color, color, border-color;
+        }
+        .category-chip:hover { transform: translateY(-3px) scale(1.03); background-color: var(--current-icon-primary); color: white; border-color: transparent; }
+        .category-chip.active { background-color: var(--current-icon-active); color: white; border-color: transparent; transform: scale(1.05); }
+        .category-chip:active { transform: scale(0.98) translateY(-1px); transition-duration: 0.1s; }
+        .custom-category-star { margin-right: 8px; color: var(--current-icon-active); transition: color 0.3s; }
+        .category-chip.active .custom-category-star { color: rgba(255, 255, 255, 0.75); }
+
+        /* News Grid & Articles */
+        .news-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 28px; 
+            perspective: 1500px; /* Added for 3D hover effect */
+        }
+        .news-article { 
+            background: var(--current-card-bg); border: 1px solid var(--current-border-color); 
+            backdrop-filter: blur(calc(var(--blur-intensity) * 2));
+            -webkit-backdrop-filter: blur(calc(var(--blur-intensity) * 2));
+            border-radius: var(--card-radius); box-shadow: 0 8px 30px -10px var(--current-shadow); 
+            transition: transform 0.4s var(--ease-soft-spring), box-shadow 0.4s var(--ease-soft-spring), opacity 0.4s; 
+            overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: var(--current-text-primary); 
+            transform-style: preserve-3d; /* Added for 3D hover effect */
+            will-change: transform, box-shadow, opacity;
+        }
+        .news-article:hover { 
+            transform: translateY(-8px) rotateX(5deg) rotateY(-3deg) scale(1.02); /* 3D Hover Effect */
+            box-shadow: 0 20px 40px -15px var(--current-shadow-strong); 
+        }
+        /* Animation states for category switching */
+        .news-article.is-entering { animation: item-enter-bouncy 0.8s var(--ease-soft-spring) both; }
+        .news-article.is-exiting { animation: item-exit-smooth 0.3s var(--ease-in-out-cubic) both; }
+
+        @keyframes item-exit-smooth {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.95); }
+        }
+
+        .article-image-wrapper { 
+            width: 100%; aspect-ratio: 16 / 9; overflow: hidden; 
+            background-color: color-mix(in srgb, var(--current-body-bg) 90%, transparent); 
+            position: relative;
+        }
+        .article-image-wrapper img { 
+            width: 100%; height: 100%; object-fit: cover; 
+            transition: transform 0.5s var(--ease-out-quint), opacity 0.4s ease-in-out;
+            opacity: 0;
+            will-change: transform, opacity;
+        }
+        .article-image-wrapper img.image-loaded { opacity: 1; }
+        .news-article:hover .article-image-wrapper img { transform: scale(1.08); }
+        .article-content { padding: 24px; display: flex; flex-direction: column; flex-grow: 1; }
+        .article-content h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+        .article-content p { font-size: 0.9rem; color: var(--current-text-secondary); line-height: 1.5; flex-grow: 1; margin-bottom: 16px; }
+        .article-footer { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--current-text-secondary); }
+        .article-source { font-weight: 600; }
+        .placeholder { 
+            text-align: center; margin-top: 50px; color: var(--current-text-secondary); padding: 40px; 
+            background: var(--current-card-bg); border-radius: var(--card-radius); 
+            backdrop-filter: blur(var(--blur-intensity));
+            -webkit-backdrop-filter: blur(var(--blur-intensity));
+            border: 1px solid var(--current-border-color); line-height: 1.6;
+        }
+        
+        /* Unified Search Input Style */
+        .unified-search-container { 
+            --angle: 0deg;
+            background: rgba(255, 255, 255, 0);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px) url(#liquid-refraction);
+            -webkit-backdrop-filter: blur(5px) url(#liquid-refraction);
+            position: relative;
+            border-radius: 40px; 
+            padding: 3px; 
+            display: grid;
+            place-content: center;
+            z-index: 0;
+            max-width: 270px;
+            margin: 0 auto;
+            transition: border-radius 0.5s var(--ease-out-quint);
+        }
+        .unified-search-container::before{
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            border-radius: inherit; 
+            background: conic-gradient(
+                from var(--angle),
+                var(--app-icon-primary-dark),
+                var(--app-icon-primary-light),
+                var(--app-icon-active-dark),
+                var(--app-icon-primary-light),
+                var(--app-icon-primary-dark)
+            );
+            opacity: 0; 
+            animation: spin 4s linear infinite paused; 
+            transition: opacity 0.4s;
+        }
+        .unified-search-container:focus-within::before {
+            opacity: 1;
+            animation-play-state: running;
+        }
+        .unified-search-wrapper {
+            position: relative; width: 100%; border-radius: inherit; 
+            background: rgba(255, 255, 255, 0); border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px) url(#liquid-refraction); -webkit-backdrop-filter: blur(5px) url(#liquid-refraction);
+            padding: 5px; display: flex; align-items: center; gap: 10px;
+            transition: all 0.3s var(--ease-in-out-cubic);
+        }
+        .unified-search-container:focus-within .unified-search-wrapper { 
+            border-color: var(--current-icon-active); 
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--current-icon-active) 30%, transparent);
+        }
+        .unified-search-input { 
+            padding: 8px 12px; width: 100%; background: transparent; border: none; outline: none;
+            color: var(--current-text-primary); font-size: 1rem; border-radius: 20px; 
+            z-index: 1; height: 44px; resize: none; flex-grow: 1;
+        }
+        .unified-search-submit-btn { 
+            width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex;
+            justify-content: center; align-items: center; flex-shrink: 0; z-index: 2;
+            position: relative; border: none; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(5px) url(#liquid-refraction);
+            -webkit-backdrop-filter: blur(5px) url(#liquid-refraction); color: var(--current-icon-primary);
+            transition: all 0.3s var(--ease-soft-spring);
+        }
+        .unified-search-submit-btn:hover {  transform: scale(1.1); }
+        .unified-search-submit-btn:active { transform: scale(0.95); transition-duration: 0.1s;}
+
+        .unified-search-submit-btn svg {
+            width: 22px; height: 22px; stroke-width: 2;
+            transform: rotate(10deg) translateX(-1px) translateY(1px);
+        }
+        
+        /* Command Bar */
+        .command-bar-container { 
+            position: fixed; bottom: var(--command-bar-v-margin); left: var(--command-bar-h-margin); right: var(--command-bar-h-margin); 
+            max-width: 320px; margin: 0 auto; z-index: 200; border-radius: var(--super-radius); 
+            background: rgba(255, 255, 255, 0); border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px) url(#liquid-refraction); -webkit-backdrop-filter: blur(10px) url(#liquid-refraction);
+            height: calc(var(--command-bar-height) + var(--safe-bottom)); 
+            transition: all 0.6s var(--ease-out-quint); will-change: height, border-radius; overflow: hidden; 
+        }
+        .command-bar-container.expanded { height: calc(var(--command-bar-expanded-height) + var(--safe-bottom)); border-radius: var(--super-radius); }
+        .command-bar-main-nav { display: flex; justify-content: space-around; align-items: center; height: var(--command-bar-height); padding: 0 10px; position: relative; z-index: 2; transition: opacity 0.3s, transform 0.4s; }
+        .command-bar-container.expanded .command-bar-main-nav { opacity: 0; transform: scale(0.9); pointer-events: none; }
+        
+        /* Command Bar Expanded Content */
+        #command-bar-expanded-content { position: absolute; inset: 0; padding-bottom: var(--safe-bottom); opacity: 0; visibility: hidden; display: flex; flex-direction: column; transition: opacity 0.4s var(--ease-out-quint) 0.1s, visibility 0s 0.5s; }
+        .command-bar-container.expanded #command-bar-expanded-content { opacity: 1; visibility: visible; transition-delay: 0.2s, 0s; }
+        #command-bar-expanded-top-nav { display: flex; justify-content: space-around; align-items: center; flex-shrink: 0; height: var(--command-bar-height); padding: 0 15px; border-bottom: 1px solid var(--current-border-color); }
+        #panels-container { flex-grow: 1; position: relative; overflow: hidden; }
+        .command-bar-panel {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column; 
+            padding: 20px; overflow: hidden; gap: 20px;
+            opacity: 0;
+            transition: opacity 0.4s var(--ease-out-quint), transform 0.4s var(--ease-out-quint);
+            will-change: opacity, transform;
+            pointer-events: none;
+        }
+        .command-bar-panel.from-right { transform: translateX(30px); }
+        .command-bar-panel.from-left { transform: translateX(-30px); }
+        .command-bar-panel.active { 
+            opacity: 1; 
+            transform: translateX(0);
+            pointer-events: auto;
+            transition-delay: 0.1s;
+        }
+        
+        /* Nav Buttons */
+        .nav-btn { background: none; border: none; cursor: pointer; width: 52px; height: 52px; border-radius: 50%; display: flex; position: relative; justify-content: center; align-items: center; color: var(--current-text-secondary); transition: color 0.3s, transform 0.3s var(--ease-soft-spring); will-change: transform, color; }
+        .nav-btn svg { width: 28px; height: 28px; stroke-width: 2; }
+        .nav-btn:hover { color: var(--current-icon-primary); transform: scale(1.1); }
+        .nav-btn.active { color: var(--current-icon-active); transform: scale(1.1); }
+        .nav-btn:active { transform: scale(0.95); transition-duration: 0.15s; transition-timing-function: var(--ease-spring-squish); }
+        
+        #theme-toggle-btn .icon-moon, #theme-toggle-btn .icon-sun { position: absolute; transition: transform 0.6s var(--ease-in-out-cubic), opacity 0.5s; will-change: transform, opacity; }
+        body.light-mode #theme-toggle-btn .icon-moon { opacity: 1; transform: rotate(0); }
+        body.light-mode #theme-toggle-btn .icon-sun { opacity: 0; transform: rotate(-180deg); }
+        body:not(.light-mode) #theme-toggle-btn .icon-moon { opacity: 0; transform: rotate(180deg); }
+        body:not(.light-mode) #theme-toggle-btn .icon-sun { opacity: 1; transform: rotate(0); }
+        
+        /* Search Panel & Results */
+        #search-panel { padding: 20px 5px 20px 20px; }
+        #command-search-results-container { flex-grow: 1; overflow-y: auto; padding-right: 15px; }
+        .search-result-item { 
+            display: flex; align-items: center; gap: 15px; padding: 12px; border-radius: 28px; 
+            text-decoration: none; color: var(--current-text-primary); margin-bottom: 12px;
+            transition: background-color 0.2s; 
+            animation: item-enter-bouncy 0.8s var(--ease-soft-spring) forwards; 
+            will-change: transform, opacity;
+        }
+        @keyframes item-enter-bouncy { 0% { opacity: 0; transform: translateY(30px) scale(0.9); } 60% { opacity: 1; transform: translateY(-5px) scale(1.02); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        .search-result-item:hover { background-color: var(--current-glass-bg); }
+        .search-result-item .img-container {
+             width: 80px; height: 50px; flex-shrink: 0; border-radius: 20px;
+             background-color: color-mix(in srgb, var(--current-body-bg) 80%, transparent);
+             position: relative; overflow: hidden;
+        }
+        .search-result-item img {
+            width: 100%; height: 100%; object-fit: cover;
+            opacity: 0; transition: opacity 0.4s ease-in-out;
+        }
+        .search-result-item img.image-loaded { opacity: 1; }
+        .search-result-text h4 { font-size: 0.95rem; line-height: 1.4; }
+        .search-result-text mark { background-color: color-mix(in srgb, var(--current-icon-primary) 30%, transparent); color: var(--current-text-primary); border-radius: 3px; padding: 2px 0;}
+
+        /* Settings Panel REDESIGN */
+        #settings-panel { padding: 0; }
+        #settings-panel-content { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; padding: 10px 20px; }
+        .setting-item { 
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 18px 10px; border-bottom: 1px solid var(--current-border-color);
+            animation: item-enter-bouncy 0.6s var(--ease-soft-spring) forwards;
+        }
+        .setting-item:last-child { border-bottom: none; }
+        .setting-label { font-weight: 500; font-size: 1rem; color: var(--current-text-secondary); }
+        body:not(.light-mode) .setting-label { color: var(--current-text-primary); }
+        
+        /* Galvan AI Notification Panel */
+        #notifications-panel {
+            background: radial-gradient(circle at 100% 0%, rgba(167, 139, 250, 0.4), transparent 40%),
+                        radial-gradient(circle at 0% 100%, rgba(99, 102, 241, 0.5), transparent 30%),
+                        var(--current-card-bg);
+            backdrop-filter: blur(20px) url(#liquid-refraction);
+            -webkit-backdrop-filter: blur(20px) url(#liquid-refraction);
+            justify-content: center; align-items: center; text-align: center;
+            padding: 30px;
+        }
+        .galvan-ai-content h2 {
+            font-size: 2rem; font-weight: 800;
+            background: linear-gradient(120deg, #A78BFA, #F472B6, #60A5FA);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 16px; animation: item-enter-bouncy 0.8s both 0.2s;
+        }
+        .galvan-ai-content p {
+            font-size: 1rem; color: var(--current-text-secondary); line-height: 1.6;
+            margin-bottom: 24px; animation: item-enter-bouncy 0.8s both 0.3s;
+        }
+        .galvan-ai-content .open-button {
+            padding: 14px 32px; border-radius: 100px; text-decoration: none;
+            font-weight: 700; font-size: 1rem; transition: all 0.3s var(--ease-soft-spring);
+            display: inline-block; animation: item-enter-bouncy 0.8s both 0.4s;
+            will-change: transform, box-shadow;
+        }
+        body.light-mode .galvan-ai-content .open-button {
+            background: #111827; color: #F9FAFB;
+        }
+        body:not(.light-mode) .galvan-ai-content .open-button {
+            background: #F9FAFB; color: #111827;
+        }
+        .galvan-ai-content .open-button:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .galvan-ai-content .open-button:active {
+             transform: scale(0.98) translateY(0);
+        }
+
+        /* Color Palette REDESIGN */
+        .color-palette-container { display: grid; grid-template-columns: 1fr; gap: 12px; width: 100%; }
+        .palette-btn {
+            background: var(--current-card-bg); border-radius: 24px; border: 2px solid var(--current-border-color);
+            padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 10px;
+            transition: all 0.2s var(--ease-soft-spring); will-change: transform, border-color;
+        }
+        .palette-btn:hover { border-color: var(--current-icon-primary); transform: translateY(-3px); }
+        .palette-btn.active { border-color: var(--current-icon-active); box-shadow: 0 0 0 3px var(--current-icon-active); }
+        .palette-preview-wrapper { display: flex; align-items: center; gap: 8px; }
+        .palette-preview-wrapper .preview-bubble { width: 60%; padding: 6px 10px; border-radius: 16px; font-size: 0.8rem; text-align: center; color: white; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .palette-preview-wrapper .preview-accent-bar { flex-grow: 1; height: 20px; border-radius: 14px; display: flex; overflow: hidden; }
+        .palette-preview-wrapper .preview-accent-bar span { flex-grow: 1; }
+        .palette-name { font-weight: 600; text-align: left; transition: color 0.3s; }
+        body:not(.light-mode) .palette-name { color: var(--current-text-primary); }
+
+        .manage-btn { padding: 12px 24px; border-radius: 100px; background-color: color-mix(in srgb, var(--current-icon-primary) 15%, transparent); border: 1px solid var(--current-border-color); color: var(--current-icon-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .manage-btn:hover { background-color: color-mix(in srgb, var(--current-icon-primary) 25%, transparent); border-color: var(--current-icon-primary); }
+
+        /* Custom Animated Blur Slider */
+        .custom-slider-container { position: relative; display: flex; align-items: center; gap: 15px; width: 100%; padding-top: 10px; }
+        .slider-track { flex-grow: 1; height: 26px; background: color-mix(in srgb, var(--current-text-primary) 15%, transparent); border-radius: 100px; position: relative; max-width: 200px; margin-left: 10px; margin-bottom: 5px; }
+        .slider-thumb { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px; background: var(--current-icon-primary); border-radius: 50%; border: 3px solid var(--current-body-bg); box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.2s var(--ease-soft-spring); will-change: transform; }
+        .custom-slider-container:hover .slider-thumb { transform: translate(-50%, -50%) scale(0.7); }
+        .slider-value { font-weight: 600; font-size: 0.9rem; color: var(--current-text-secondary); min-width: 25px; text-align: right; }
+
+        /* Modal Styles */
+        .modal-overlay { 
+            position: fixed; inset: 0; z-index: 1001; display: flex; justify-content: center;
+            align-items: flex-end; background-color: rgba(0, 0, 0, 0); 
+            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+            transition: opacity 0.6s var(--ease-out-quint), visibility 0s linear 0.6s, backdrop-filter 0.6s var(--ease-out-quint);
+            opacity: 0; visibility: hidden;
+        }
+        .modal-overlay.visible { opacity: 1; visibility: visible; transition-delay: 0s; }
+        .modal-content { 
+            width: 90%; max-width: 540px; max-height: 85vh; margin: 0 auto var(--command-bar-v-margin); 
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px) url(#liquid-refraction); -webkit-backdrop-filter: blur(5px) url(#liquid-refraction); 
+            border-radius: 22px; border: 1px solid color-mix(in srgb, var(--current-border-color) 40%, transparent);
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 20px 60px -15px var(--current-shadow-strong);
+            padding: 12px 12px calc(16px + var(--safe-bottom)) 12px;
+            transform: translateY(calc(100% + 80px));
+            transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); 
+            will-change: transform; position: relative; display: flex; flex-direction: column;
+        }
+        .modal-content::before{
+            content: ''; position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+            width: 48px; height: 6px; background-color: color-mix(in srgb, var(--current-border-color) 80%, transparent);
+            border-radius: 53px;
+        }
+        .modal-overlay.visible .modal-content { transform: translateY(0); }
+        .modal-header {
+            display: flex; justify-content: center; align-items: center;
+            padding: 24px 12px 18px 12px; position: relative;
+            border-bottom: 1px solid var(--current-border-color);
+            margin-bottom: 10px; flex-shrink: 0;
+        }
+        .modal-header h2 { font-size: 1.2rem; }
+        .modal-close-btn {
+            position: absolute; top: 22px; right: 14px; background: var(--current-bg-tertiary);
+            border: none; border-radius: 50%; width: 32px; height: 32px;
+            color: var(--current-text-secondary); display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: transform 0.25s var(--ease-out-quint), background-color 0.25s;
+        }
+        .modal-close-btn:hover { background-color: var(--current-border-color); transform: scale(1.1); }
+        .modal-body { flex-grow: 1; overflow-y: auto; padding: 24px; -webkit-overflow-scrolling: touch; }
+        .modal-footer { padding: 20px 24px; border-top: 1px solid var(--current-border-color); display: flex; justify-content: flex-end; gap: 12px; flex-shrink: 0; }
+        .modal-footer button { padding: 14px 28px; border: none; border-radius: 100px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.2s var(--ease-soft-spring); }
+        .modal-footer .save-btn { background: var(--current-icon-primary); color: white; }
+        .modal-footer .save-btn:hover { background: var(--current-icon-active); transform: scale(1.03); }
+
+        /* Category Modal Specifics */
+        .modal-body h3 { font-size: 0.9rem; text-transform: uppercase; color: var(--current-text-secondary); margin-bottom: 12px; letter-spacing: .5px; }
+        #custom-category-form.unified-search-container {
+            max-width: 100%; margin: 0; padding: 0; border: none;
+            margin-bottom: 24px; border-bottom: 1px dashed var(--current-border-color);
+        }
+        #category-selector-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+        .category-select-item { 
+            display: flex; align-items: center; padding: 18px; border-radius: 500px;
+            font-size: 1.1rem; font-weight: 500; cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s, color 0.3s;
+            transform: translateY(30px) scale(0.95); margin-bottom: 8px;
+            border: 1px solid transparent; position: relative;
+            animation: item-enter-bouncy 0.6s var(--ease-soft-spring) forwards;
+        }
+        .category-select-item:hover { background-color: var(--current-bg-tertiary); transform: scale(1.02); }
+        .category-select-item.selected { background-color: var(--current-icon-primary); color: white; font-weight: 600; }
+        .category-select-item .check-icon {
+            margin-left: auto; position: relative; width: 28px; height: 28px;
+            display: flex; align-items: center; justify-content: center;
+            color: currentColor; transition: opacity 0.3s, transform 0.4s var(--ease-soft-spring);
+            opacity: 0; transform: scale(0.5) rotate(-90deg);
+        }
+        .category-select-item.selected .check-icon { opacity: 1; transform: scale(1) rotate(0); }
+        .delete-custom-btn {
+            position: absolute; top: -5px; right: -5px; background: red; color: white; border: 2px solid var(--current-body-bg);
+            border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center;
+            justify-content: center; cursor: pointer; opacity: 0; transform: scale(0.5);
+            transition: all 0.3s var(--ease-soft-spring); font-size: 14px; line-height: 1;
+        }
+        .category-select-item.is-custom:hover .delete-custom-btn { opacity: 1; transform: scale(1); }
+        .delete-custom-btn:hover { transform: scale(1.15) rotate(90deg); }
+
+        @keyframes spin { from { --angle: 0deg; } to { --angle: 360deg; } }
+        .spinner { border: 4px solid color-mix(in srgb, var(--current-text-primary) 20%, transparent); border-left-color: var(--current-icon-primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 40px auto; display: none; }
+        .spinner.visible { display: block; }
+
+        @keyframes shimmer { 100% { transform: translateX(100%); } }
+        .skeleton-card {
+            background: var(--current-card-bg); border: 1px solid var(--current-border-color);
+            backdrop-filter: blur(calc(var(--blur-intensity) * 2)); -webkit-backdrop-filter: blur(calc(var(--blur-intensity) * 2));
+            border-radius: var(--card-radius); box-shadow: 0 8px 30px -10px var(--current-shadow);
+            overflow: hidden; display: flex; flex-direction: column;
+        }
+        .skeleton-card .image { width: 100%; aspect-ratio: 16 / 9; background-color: color-mix(in srgb, var(--current-text-primary) 10%, transparent); position: relative; overflow: hidden; }
+        .skeleton-card .content { padding: 24px; }
+        .skeleton-card .line { height: 16px; margin-bottom: 12px; border-radius: 8px; background-color: color-mix(in srgb, var(--current-text-primary) 15%, transparent); position: relative; overflow: hidden; }
+        .skeleton-card .line.short { width: 60%; }
+        .skeleton-card .line.medium { width: 80%; }
+        .skeleton-card .image::after, .skeleton-card .line::after,
+        .article-image-wrapper.image-loading::after,
+        .search-result-item .img-container.image-loading::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            transform: translateX(-100%);
+            background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--current-text-primary) 5%, transparent), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+    </style>
+</head>
+<body class="light-mode">
+    <div class="animated-background"></div>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>Galvan News</h1>
+            <div class="header-actions">
+                <button id="top-search-btn" class="nav-btn" aria-label="Open Search"></button>
+            </div>
+        </header>
+
+        <main class="news-container" id="news-container">
+            <div id="news-categories" class="news-categories"></div>
+            <div class="news-grid" id="news-content-area"></div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="category-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Manage Categories</h2>
+                <button class="modal-close-btn" id="category-modal-close-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h3>Add New</h3>
+                <form id="custom-category-form" onsubmit="return false;" class="unified-search-container">
+                    <div class="unified-search-wrapper">
+                         <input type="text" id="custom-category-input" class="unified-search-input" placeholder="Add custom category..." autocomplete="off">
+                         <button type="submit" id="add-custom-category-btn" class="unified-search-submit-btn" aria-label="Add Category"></button>
+                    </div>
+                </form>
+                <h3>Select Categories</h3>
+                <div id="category-selector-list"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="save-btn" id="category-modal-save-btn">Save Selections</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Command Bar -->
+    <div class="command-bar-container" id="command-bar-container">
+        <nav class="command-bar-main-nav">
+            <button class="nav-btn active" data-panel="home" aria-label="Home"></button>
+            <button class="nav-btn" data-panel="search" aria-label="Search"></button>
+            <button class="nav-btn" data-panel="notifications" aria-label="Notifications"></button>
+            <button class="nav-btn" data-panel="settings" aria-label="Settings"></button>
+            <button class="nav-btn" id="theme-toggle-btn" aria-label="Toggle Theme"></button>
+        </nav>
+        <div id="command-bar-expanded-content">
+            <nav id="command-bar-expanded-top-nav"></nav>
+            <div id="panels-container">
+                <div class="command-bar-panel" id="search-panel">
+                     <div class="unified-search-container">
+                        <div class="unified-search-wrapper">
+                            <input type="search" id="command-search-input" class="unified-search-input" placeholder="Search news as you type..." required autocomplete="off">
+                            <button type="button" class="unified-search-submit-btn" aria-label="Search"></button>
+                        </div>
+                    </div>
+                    <div id="command-search-results-container"></div>
+                </div>
+                <div class="command-bar-panel" id="notifications-panel">
+                    <div class="galvan-ai-content">
+                        <h2>Galvan AI</h2>
+                        <p>Discover the next generation of artificial intelligence. Powerful, intuitive, and seamlessly integrated to elevate your digital experience.</p>
+                        <a href="https://galvandeveloper.github.io/Galvan-Ai/" target="_blank" rel="noopener noreferrer" class="open-button">Visit</a>
+                    </div>
+                </div>
+                <div class="command-bar-panel" id="settings-panel">
+                    <div id="settings-panel-content">
+                        <div class="setting-item" style="animation-delay: 0.05s;">
+                            <span class="setting-label">Dark Mode</span>
+                            <label class="galvan-switch"><input type="checkbox" id="setting-dark-mode"><span class="slider"></span></label>
+                        </div>
+                        <div class="setting-item" style="animation-delay: 0.1s;">
+                             <span class="setting-label">Blur</span>
+                             <div id="custom-blur-slider" class="custom-slider-container">
+                                 <div class="slider-track"><div class="slider-thumb"></div></div>
+                                 <div class="slider-value">5</div>
+                             </div>
+                        </div>
+                         <div class="setting-item" style="animation-delay: 0.15s; flex-direction: column; align-items: flex-start; gap: 15px; padding-bottom: 20px;">
+                            <span class="setting-label">Color Palette</span>
+                            <div class="color-palette-container" id="color-palette-container"></div>
+                        </div>
+                        <div class="setting-item" style="animation-delay: 0.2s;">
+                            <span class="setting-label">News Categories</span>
+                            <button class="manage-btn" id="manage-categories-btn">Manage</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        .galvan-switch { position: relative; display: inline-block; width: 48px; height: 28px; flex-shrink: 0;}
+        .galvan-switch input { opacity: 0; width: 0; height: 0; }
+        .galvan-switch .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: color-mix(in srgb, var(--current-text-primary) 20%, transparent); transition: .3s; border-radius: 28px; }
+        .galvan-switch .slider:before { 
+            position: absolute; content: ""; height: 22px; width: 22px; 
+            left: 3px; bottom: 3px; background-color: var(--current-body-bg); 
+            transition: transform .35s var(--ease-soft-spring), width 0.3s var(--ease-soft-spring); border-radius: 50%; 
+        }
+        .galvan-switch input:checked + .slider { background-color: var(--current-icon-active); }
+        .galvan-switch input:focus-visible + .slider { box-shadow: 0 0 0 3px color-mix(in srgb, var(--current-icon-active) 30%, transparent); }
+        .galvan-switch input:checked + .slider:before { transform: translateX(20px); }
+        .galvan-switch input:active + .slider:before { width: 26px; }
+        .galvan-switch input:checked:active + .slider:before { transform: translateX(14px); }
+    </style>
+<body>
+
+<svg style="position:absolute; width:0; height:0">
+  <filter id="liquid-refraction">
+    <feImage xlink:href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJ4R3JhZCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMDgwODAiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRjgwODAiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0ieUdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjODAwMDgwIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjODBGRjgwIi8+PC9saW5lYXJHcmFkaWVudD48ZmlsdGVyIGlkPSJibHVyLW1hc2stZmlsdGVyIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSIxMCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3hHcmFkKSIvPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjeUdyYWQpIiBzdHlsZT0ibWl4LWJsZW5kLW1v%0D%0AZGU6IHNjcmVlbjsiLz48cmVjdCB4PSIxMCIgeT0iMTAiIHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiByeD0iMjUiIHJ5PSIyNSIgZmlsbD0iIzgwODA4MCIgZmlsdGVyPSJ1cmwoI2JsdXItbWFzay1maWx0ZXIpIi8+PC9zdmc+" 
+             x="0" y="0" width="100%" height="100%" result="dispMap" />
+    <feDisplacementMap in="SourceGraphic" in2="dispMap" scale="35" xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+</svg>
+
+</body>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const GNEWS_API_KEY = '6b0df515d1167ff5a6cbceb2cc91b341';
+        
+        let NEWS_SECTIONS = [ { title: 'General', query: 'general' }, { title: 'Technology', query: 'technology' }, { title: 'Sports', query: 'sports' }, { title: 'Business', query: 'business' }, { title: 'Health', query: 'health' }, { title: 'Science', query: 'science' }, { title: 'Entertainment', query: 'entertainment' }, { title: 'World', query: 'world' }, { title: 'Nation', query: 'nation' }];
+        const COLOR_PALETTES = {
+            galvan: { name: 'Galvan', light: { accent1: '#2563EB', accent2: '#1D4ED8' }, dark: { accent1: '#60A5FA', accent2: '#93C5FD' }},
+            sunset: { name: 'Sunset', light: { accent1: '#F97316', accent2: '#EA580C' }, dark: { accent1: '#FBBF24', accent2: '#F59E0B' }},
+            ocean:  { name: 'Ocean',  light: { accent1: '#059669', accent2: '#047857' }, dark: { accent1: '#10B981', accent2: '#34D399' }},
+            nebula: { name: 'Nebula', light: { accent1: '#7C3AED', accent2: '#6D28D9' }, dark: { accent1: '#A78BFA', accent2: '#C4B5FD' }},
+        };
+        const ICONS = { 
+            home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>', 
+            search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+            notifications: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>',
+            settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>', 
+            moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>', 
+            sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>', 
+            send: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 L11 13"></path><path d="M22 2 L15 22 L11 13 L2 9 L22 2 Z"></path></svg>', 
+            check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>', 
+            trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>' 
+        };
+
+        let isFetching = false; let currentCategory = 'general'; let activePanel = 'home';
+        let userSelectedCategories = []; let tempSelectedCategories = []; let customCategories = [];
+        let panelDirection = 'right';
+
+        const ui = {
+            body: document.body, mainContainer: document.getElementById('news-content-area'), 
+            commandBar: { 
+                container: document.getElementById('command-bar-container'), panelsContainer: document.getElementById('panels-container'),
+                mainNavButtons: document.querySelectorAll('.command-bar-main-nav .nav-btn'), 
+                themeToggleBtn: document.getElementById('theme-toggle-btn'), expandedTopNav: document.getElementById('command-bar-expanded-top-nav'), 
+                commandSearchInput: document.getElementById('command-search-input'),
+                commandSearchResultsContainer: document.getElementById('command-search-results-container'),
+                panels: { 
+                    search: document.getElementById('search-panel'), 
+                    settings: document.getElementById('settings-panel'),
+                    notifications: document.getElementById('notifications-panel')
+                }, 
+                settingsControls: { darkMode: document.getElementById('setting-dark-mode'), blurSlider: document.getElementById('custom-blur-slider'), paletteContainer: document.getElementById('color-palette-container'), manageCategoriesBtn: document.getElementById('manage-categories-btn') } 
+            }, 
+            newsCategoriesContainer: document.getElementById('news-categories'), 
+            categoryModal: { 
+                overlay: document.getElementById('category-modal'), closeBtn: document.getElementById('category-modal-close-btn'), 
+                saveBtn: document.getElementById('category-modal-save-btn'), list: document.getElementById('category-selector-list'),
+                customForm: document.getElementById('custom-category-form'),
+                customInput: document.getElementById('custom-category-input'),
+                addCustomBtn: document.getElementById('add-custom-category-btn')
+            }
+        };
+        
+        const debounce = (func, delay = 500) => { let timeout; return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => { func.apply(this, args); }, delay); }; };
+        const showSpinner = (container) => { container.innerHTML = '<div class="spinner visible"></div>'; };
+        const showSkeletonLoader = (container) => {
+            container.innerHTML = Array(8).fill('<div class="skeleton-card"><div class="image"></div><div class="content"><div class="line"></div><div class="line medium"></div><div class="line short"></div></div></div>').join('');
+        };
+        
+        const app = {
+            init() { this.loadSettings(); this.renderIcons(); this.setupEventListeners(); this.renderDynamicUI(); this.loadInitialContent(); },
+            loadSettings() {
+                customCategories = JSON.parse(localStorage.getItem('news-custom-categories')) || [];
+                userSelectedCategories = JSON.parse(localStorage.getItem('news-categories')) || NEWS_SECTIONS.map(s => s.query);
+                currentCategory = localStorage.getItem('news-last-category') || 'general';
+                const theme = localStorage.getItem('news-theme') || 'light'; 
+                const blur = localStorage.getItem('news-blur') || 5;
+                const palette = localStorage.getItem('news-palette') || 'galvan';
+                this.applyTheme(theme === 'light', false); this.applyBlur(blur); this.applyPalette(palette, false);
+            },
+            setupEventListeners() {
+                document.getElementById('top-search-btn').addEventListener('click', () => this.setPanel('search'));
+                ui.commandBar.mainNavButtons.forEach(btn => btn.addEventListener('click', (e) => this.handlePanelClick(e.currentTarget)));
+                ui.commandBar.themeToggleBtn.addEventListener('click', e => { e.stopPropagation(); this.applyTheme(!ui.body.classList.contains('light-mode')); });
+                ui.commandBar.commandSearchInput.addEventListener('input', debounce(e => this.handleCommandSearch(e.target.value), 350));
+                ui.commandBar.settingsControls.darkMode.addEventListener('change', e => this.applyTheme(!e.target.checked));
+                this.setupCustomBlurSlider();
+                ui.commandBar.settingsControls.manageCategoriesBtn.addEventListener('click', () => this.openCategoryModal());
+                ui.categoryModal.closeBtn.addEventListener('click', () => this.closeCategoryModal());
+                ui.categoryModal.saveBtn.addEventListener('click', () => this.saveCategorySelection());
+                ui.categoryModal.overlay.addEventListener('click', (e) => e.target === ui.categoryModal.overlay && this.closeCategoryModal());
+                ui.categoryModal.customForm.addEventListener('submit', () => this.addCustomCategory());
+
+                // OPTIMIZATION: Event delegation for category chips
+                ui.newsCategoriesContainer.addEventListener('click', (e) => {
+                    const chip = e.target.closest('.category-chip');
+                    if (chip && !chip.classList.contains('active')) {
+                        this.handleCategoryChange(chip.dataset.query);
+                    }
+                });
+            },
+            renderIcons() {
+                document.querySelector('.nav-btn[data-panel="home"]').innerHTML = ICONS.home;
+                document.querySelector('.nav-btn[data-panel="search"]').innerHTML = ICONS.search;
+                document.querySelector('.nav-btn[data-panel="notifications"]').innerHTML = ICONS.notifications;
+                document.querySelector('.nav-btn[data-panel="settings"]').innerHTML = ICONS.settings;
+                ui.commandBar.themeToggleBtn.innerHTML = `<span class="icon-moon">${ICONS.moon}</span><span class="icon-sun">${ICONS.sun}</span>`;
+                document.getElementById('top-search-btn').innerHTML = ICONS.search;
+                document.querySelectorAll('.unified-search-submit-btn').forEach(btn => btn.innerHTML = ICONS.send);
+            },
+            renderDynamicUI() { this.populateExpandedTopNav(); this.renderColorPalettes(); this.renderCategoryChips(); },
+            async fetchNews(params) {
+                if (isFetching) return null; isFetching = true;
+                const endpoint = params.q ? 'https://gnews.io/api/v4/search' : 'https://gnews.io/api/v4/top-headlines';
+                const url = new URL(endpoint);
+                let searchParams = { lang: 'en', apikey: GNEWS_API_KEY, max: 40, ...params };
+                if (customCategories.some(c => c.query === params.category) && !params.q) {
+                    delete searchParams.category; searchParams.q = `"${params.category}"`;
+                }
+                url.search = new URLSearchParams(searchParams);
+                try {
+                    const res = await fetch(url);
+                    if (!res.ok) { const errorData = await res.json(); throw new Error(`API Error (${res.status}): ${errorData.errors[0]}`); }
+                    const data = await res.json();
+                    return data.articles.filter(article => article.title && article.title !== "[Removed]");
+                } catch (error) { console.error("Failed to fetch news:", error); return { error: true, message: `<strong>Fetch Failed</strong><br><span>${error.message}</span>` };
+                } finally { isFetching = false; }
+            },
+            async loadInitialContent() { 
+                showSkeletonLoader(ui.mainContainer);
+                const articles = await this.fetchNews({ category: currentCategory }); 
+                this.renderNewsGrid(articles); 
+            },
+            // OPTIMIZATION: Use DocumentFragment for rendering
+            renderNewsGrid(articles, isLoadMore = false) {
+                if (!isLoadMore) ui.mainContainer.innerHTML = '';
+                if (!articles || articles.error) { ui.mainContainer.innerHTML = `<div class="placeholder">${articles?.message || 'Could Not Load News.'}</div>`; return; }
+                if (articles.length === 0 && !isLoadMore) { ui.mainContainer.innerHTML = `<div class="placeholder">No articles found.</div>`; return; }
+                
+                const fragment = document.createDocumentFragment();
+                articles.forEach((article, i) => {
+                    const card = document.createElement('a');
+                    card.className = 'news-article is-entering'; card.href = article.url; card.target = '_blank'; card.rel = 'noopener noreferrer';
+                    card.style.animationDelay = `${i * 50}ms`;
+                    const publishedDate = new Date(article.publishedAt).toLocaleDateString();
+                    card.innerHTML = `
+                        <div class="article-image-wrapper image-loading"><img data-src="${article.image || ''}" alt="" loading="lazy"></div>
+                        <div class="article-content">
+                            <h3>${article.title}</h3><p>${article.description || 'No description available.'}</p>
+                            <div class="article-footer"><span class="article-source">${article.source.name}</span><span>${publishedDate}</span></div>
+                        </div>`;
+                    fragment.appendChild(card);
+                    const img = card.querySelector('img');
+                    if (img && img.dataset.src) {
+                        img.onload = () => { img.classList.add('image-loaded'); img.parentElement.classList.remove('image-loading'); };
+                        img.onerror = () => img.parentElement.classList.add('image-loading');
+                        img.src = img.dataset.src;
+                    }
+                });
+                ui.mainContainer.appendChild(fragment);
+            },
+            async handleCategoryChange(newCategory) {
+                currentCategory = newCategory;
+                localStorage.setItem('news-last-category', currentCategory);
+                this.renderCategoryChips();
+
+                // ANIMATION: Animate out old articles
+                const articles = ui.mainContainer.querySelectorAll('.news-article');
+                articles.forEach((article, i) => {
+                    article.classList.remove('is-entering');
+                    article.classList.add('is-exiting');
+                    article.style.animationDelay = `${i * 20}ms`;
+                });
+
+                // Wait for exit animation to complete before loading new content
+                const longestExitDelay = (articles.length - 1) * 20;
+                setTimeout(async () => {
+                    showSkeletonLoader(ui.mainContainer);
+                    const newArticles = await this.fetchNews({ category: currentCategory });
+                    this.renderNewsGrid(newArticles);
+                }, 300 + longestExitDelay);
+            },
+            async handleCommandSearch(query) {
+                const container = ui.commandBar.commandSearchResultsContainer;
+                if (!query) { container.innerHTML = '<p class="placeholder">Search for news and topics.</p>'; return; }
+                showSpinner(container);
+                const articles = await this.fetchNews({ q: query, max: 25 });
+                this.renderCommandSearchResults(articles, query, container);
+            },
+            renderCommandSearchResults(articles, query, container) {
+                container.innerHTML = '';
+                if (!articles || articles.error) { container.innerHTML = `<div class="placeholder">${articles?.message || 'Search Failed.'}</div>`; return; }
+                if(articles.length === 0) { container.innerHTML = '<p class="placeholder">No results found.</p>'; return; }
+                
+                const fragment = document.createDocumentFragment();
+                const regex = new RegExp(query, 'gi');
+                articles.forEach((article, i) => {
+                    const item = document.createElement('a');
+                    item.href = article.url; item.target = '_blank'; item.rel = 'noopener noreferrer';
+                    item.className = 'search-result-item'; item.style.animationDelay = `${i * 60}ms`;
+                    item.innerHTML = `
+                        <div class="img-container image-loading"><img data-src="${article.image || ''}" alt="" loading="lazy"></div>
+                        <div class="search-result-text"><h4>${article.title.replace(regex, match => `<mark>${match}</mark>`)}</h4></div>`;
+                    fragment.appendChild(item);
+                    const img = item.querySelector('img');
+                    if (img && img.dataset.src) {
+                        img.onload = () => { img.classList.add('image-loaded'); img.parentElement.classList.remove('image-loading'); };
+                        img.onerror = () => img.parentElement.classList.add('image-loading');
+                        img.src = img.dataset.src;
+                    }
+                });
+                container.appendChild(fragment);
+            },
+            handlePanelClick(button) {
+                const panelName = button.dataset.panel;
+                if (!panelName) return;
+
+                const currentPanelIndex = Array.from(ui.commandBar.mainNavButtons).findIndex(btn => btn.dataset.panel === activePanel);
+                const newPanelIndex = Array.from(ui.commandBar.mainNavButtons).findIndex(btn => btn === button);
+                panelDirection = newPanelIndex > currentPanelIndex ? 'right' : 'left';
+                
+                this.setPanel(panelName);
+            },
+            setPanel(panelName) {
+                if (panelName === activePanel && panelName !== 'home') { this.closeExpandedBar(); return; }
+                if (panelName === 'home') { this.closeExpandedBar(); return; }
+                activePanel = panelName;
+                ui.body.classList.add('modal-open'); ui.commandBar.container.classList.add('expanded');
+                
+                // Update button states
+                const allNavButtons = document.querySelectorAll('.nav-btn[data-panel]');
+                allNavButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.panel === panelName));
+                
+                // Animate panels
+                document.querySelectorAll('.command-bar-panel').forEach(p => {
+                    p.classList.remove('active', 'from-left', 'from-right');
+                    p.classList.add(panelDirection === 'right' ? 'from-left' : 'from-right');
+                });
+                if (ui.commandBar.panels[panelName]) {
+                    const panel = ui.commandBar.panels[panelName];
+                    panel.classList.remove('from-left', 'from-right');
+                    panel.classList.add('active');
+                }
+
+                if (panelName === 'search') {
+                    ui.commandBar.commandSearchResultsContainer.innerHTML = '<p class="placeholder">Search for articles and topics.</p>';
+                    setTimeout(() => ui.commandBar.commandSearchInput.focus(), 300);
+                }
+            },
+            closeExpandedBar() {
+                activePanel = 'home'; ui.body.classList.remove('modal-open');
+                ui.commandBar.container.classList.remove('expanded');
+                ui.commandBar.mainNavButtons.forEach(btn => btn.classList.remove('active'));
+                document.querySelector('.nav-btn[data-panel="home"]').classList.add('active');
+            },
+            populateExpandedTopNav() {
+                ui.commandBar.expandedTopNav.innerHTML = '';
+                ui.commandBar.mainNavButtons.forEach(btn => {
+                    const clone = btn.cloneNode(true);
+                    clone.addEventListener('click', e => { e.stopPropagation();
+                        if (clone.id === 'theme-toggle-btn') this.applyTheme(!ui.body.classList.contains('light-mode'));
+                        else this.handlePanelClick(clone);
+                    });
+                    ui.commandBar.expandedTopNav.appendChild(clone);
+                });
+            },
+            renderCategoryChips() {
+                const fragment = document.createDocumentFragment();
+                const allCategories = [...NEWS_SECTIONS, ...customCategories];
+                const displayed = allCategories.filter(s => userSelectedCategories.includes(s.query));
+                if (displayed.length === 0) { displayed.push(NEWS_SECTIONS[0]); userSelectedCategories.push(NEWS_SECTIONS[0].query); }
+                if (!userSelectedCategories.includes(currentCategory)) { currentCategory = displayed[0]?.query || 'general'; }
+                
+                displayed.forEach(section => {
+                    const chip = document.createElement('button');
+                    chip.className = 'category-chip'; 
+                    chip.dataset.query = section.query;
+                    const isCustom = customCategories.some(c => c.query === section.query);
+                    chip.innerHTML = isCustom ? `<span class="custom-category-star">★</span> ${section.title}` : section.title;
+                    if (section.query === currentCategory) chip.classList.add('active');
+                    fragment.appendChild(chip);
+                });
+                ui.newsCategoriesContainer.innerHTML = '';
+                ui.newsCategoriesContainer.appendChild(fragment);
+            },
+            openCategoryModal() {
+                tempSelectedCategories = [...userSelectedCategories]; this.renderCategorySelector();
+                ui.body.classList.add('modal-open'); ui.categoryModal.overlay.classList.add('visible');
+            },
+            closeCategoryModal() {
+                if(ui.body.classList.contains('modal-open') && !ui.commandBar.container.classList.contains('expanded')) {
+                    ui.body.classList.remove('modal-open');
+                }
+                ui.categoryModal.overlay.classList.remove('visible');
+            },
+            addCustomCategory() {
+                const input = ui.categoryModal.customInput;
+                const newCategoryName = input.value.trim();
+                if (!newCategoryName) return;
+                const allCategories = [...NEWS_SECTIONS, ...customCategories];
+                if (allCategories.some(c => c.title.toLowerCase() === newCategoryName.toLowerCase())) { return; }
+                const newCategory = { title: newCategoryName, query: newCategoryName };
+                customCategories.unshift(newCategory); tempSelectedCategories.push(newCategory.query);
+                localStorage.setItem('news-custom-categories', JSON.stringify(customCategories));
+                this.renderCategorySelector(); input.value = ""; input.focus();
+            },
+            renderCategorySelector() {
+                const fragment = document.createDocumentFragment();
+                const allCategories = [...customCategories, ...NEWS_SECTIONS]; 
+                allCategories.forEach((section, i) => {
+                    const item = document.createElement('button');
+                    item.className = 'category-select-item'; item.dataset.query = section.query;
+                    item.style.animationDelay = `${i * 30}ms`;
+                    const isCustom = customCategories.some(c => c.query === section.query);
+                    if(isCustom) item.classList.add('is-custom');
+                    item.innerHTML = `<span>${isCustom ? '★ ' : ''}${section.title}</span><span class="check-icon">${ICONS.check}</span>`;
+                    if (tempSelectedCategories.includes(section.query)) item.classList.add('selected');
+                    
+                    if (isCustom) {
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.className = 'delete-custom-btn'; deleteBtn.innerHTML = '&times;';
+                        deleteBtn.ariaLabel = `Delete ${section.title}`;
+                        deleteBtn.onclick = (e) => { e.stopPropagation(); this.deleteCustomCategory(section.query); };
+                        item.appendChild(deleteBtn);
+                    }
+                    item.addEventListener('click', () => {
+                        const query = item.dataset.query;
+                        const isSelected = item.classList.toggle('selected');
+                        if (isSelected) { if (!tempSelectedCategories.includes(query)) tempSelectedCategories.push(query); } 
+                        else { if (tempSelectedCategories.length > 1) tempSelectedCategories = tempSelectedCategories.filter(c => c !== query); else item.classList.add('selected'); }
+                    });
+                    fragment.appendChild(item);
+                });
+                ui.categoryModal.list.innerHTML = '';
+                ui.categoryModal.list.appendChild(fragment);
+            },
+            deleteCustomCategory(queryToDelete) {
+                customCategories = customCategories.filter(c => c.query !== queryToDelete);
+                tempSelectedCategories = tempSelectedCategories.filter(c => c !== queryToDelete);
+                localStorage.setItem('news-custom-categories', JSON.stringify(customCategories));
+                this.renderCategorySelector();
+            },
+            saveCategorySelection() {
+                userSelectedCategories = [...tempSelectedCategories];
+                if (!userSelectedCategories.includes(currentCategory)) {
+                     currentCategory = userSelectedCategories[0] || 'general';
+                     localStorage.setItem('news-last-category', currentCategory);
+                }
+                localStorage.setItem('news-categories', JSON.stringify(userSelectedCategories));
+                this.renderCategoryChips(); this.loadInitialContent(); this.closeCategoryModal();
+            },
+            renderColorPalettes() {
+                const container = ui.commandBar.settingsControls.paletteContainer; container.innerHTML = '';
+                const fragment = document.createDocumentFragment();
+                Object.keys(COLOR_PALETTES).forEach(id => {
+                    const p = COLOR_PALETTES[id]; 
+                    const btn = document.createElement('button');
+                    btn.className = 'palette-btn'; btn.dataset.id = id; btn.setAttribute('aria-label', p.name);
+                    btn.innerHTML = `<div class="palette-name">${p.name}</div><div class="palette-preview-wrapper"><div class="preview-bubble" style="background: linear-gradient(135deg, ${p.light.accent1}, ${p.dark.accent2});"></div><div class="preview-accent-bar"><span style="background-color: ${p.light.accent1};"></span><span style="background-color: ${p.dark.accent1};"></span></div></div>`;
+                    btn.onclick = () => this.applyPalette(id); 
+                    fragment.appendChild(btn);
+                });
+                container.appendChild(fragment);
+                const activePalette = localStorage.getItem('news-palette') || 'galvan';
+                const activeBtn = container.querySelector(`.palette-btn[data-id="${activePalette}"]`);
+                if (activeBtn) activeBtn.classList.add('active');
+            },
+            applyTheme(isLight, save = true) {
+                ui.body.classList.toggle('light-mode', isLight);
+                ui.commandBar.settingsControls.darkMode.checked = !isLight;
+                this.applyPalette(localStorage.getItem('news-palette') || 'galvan', false);
+                if(save) { localStorage.setItem('news-theme', isLight ? 'light' : 'dark'); this.renderColorPalettes(); }
+            },
+            applyBlur(value) { document.documentElement.style.setProperty('--blur-intensity', `${Math.round(value)}px`); },
+            setupCustomBlurSlider() {
+                const sliderContainer = ui.commandBar.settingsControls.blurSlider; if (!sliderContainer) return;
+                const track = sliderContainer.querySelector('.slider-track'), thumb = sliderContainer.querySelector('.slider-thumb'), valueLabel = sliderContainer.querySelector('.slider-value');
+                const min = 0, max = 30; let currentValue = parseFloat(localStorage.getItem('news-blur')) || 5;
+                const updateSlider = (value) => {
+                    thumb.style.left = `${((value - min) / (max - min)) * 100}%`;
+                    valueLabel.textContent = Math.round(value); this.applyBlur(value);
+                };
+                updateSlider(currentValue);
+                let isDragging = false;
+                const startDrag = (e) => { isDragging = true; document.body.style.cursor = 'grabbing'; moveThumb(e); };
+                const stopDrag = () => { if (isDragging) { isDragging = false; document.body.style.cursor = ''; localStorage.setItem('news-blur', currentValue); } };
+                const moveThumb = (e) => {
+                    if (!isDragging) return; e.preventDefault();
+                    const rect = track.getBoundingClientRect(); const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    currentValue = min + (Math.max(0, Math.min(1, (clientX - rect.left) / rect.width))) * (max - min);
+                    updateSlider(currentValue);
+                };
+                sliderContainer.addEventListener('mousedown', startDrag); document.addEventListener('mousemove', moveThumb); document.addEventListener('mouseup', stopDrag);
+                sliderContainer.addEventListener('touchstart', startDrag, { passive: false }); document.addEventListener('touchmove', moveThumb, { passive: false }); document.addEventListener('touchend', stopDrag);
+            },
+            applyPalette(paletteId, save = true) {
+                const palette = COLOR_PALETTES[paletteId]; if(!palette) return;
+                const root = document.documentElement.style;
+                root.setProperty('--app-icon-primary-light', palette.light.accent1); root.setProperty('--app-icon-active-light', palette.light.accent2);
+                root.setProperty('--app-icon-primary-dark', palette.dark.accent1); root.setProperty('--app-icon-active-dark', palette.dark.accent2);
+                if (save) localStorage.setItem('news-palette', paletteId);
+                document.querySelectorAll('.palette-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.id === paletteId));
+            },
+        };
+        
+        app.init();
+    });
+    </script>
+</body>
+</html>
